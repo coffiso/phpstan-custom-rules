@@ -1,0 +1,26 @@
+parametersSchema:
+    coffisoRules: structure([
+        requireReadonlyClass: structure([
+            enabled: bool()
+            reportAbstractClasses: bool()
+            reportClassesExtendingNonReadonlyParent: bool()
+        ])
+    ])
+
+parameters:
+    coffisoRules:
+        requireReadonlyClass:
+            enabled: true
+            reportAbstractClasses: true
+            reportClassesExtendingNonReadonlyParent: false
+
+services:
+    -
+        class: Coffiso\PHPStan\Rule\RequireReadonlyClassRule
+        arguments:
+            reportAbstractClasses: %coffisoRules.requireReadonlyClass.reportAbstractClasses%
+            reportClassesExtendingNonReadonlyParent: %coffisoRules.requireReadonlyClass.reportClassesExtendingNonReadonlyParent%
+
+conditionalTags:
+    Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
+        phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%

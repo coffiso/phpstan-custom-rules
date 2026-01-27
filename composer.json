@@ -1,0 +1,60 @@
+{
+    "name": "coffiso/phpstan-custom-rules",
+    "description": "Custom PHPStan rules for enforcing readonly class declarations and other best practices.",
+    "license": "MIT",
+    "type": "phpstan-extension",
+    "keywords": [
+        "phpstan",
+        "static analysis",
+        "readonly",
+        "php8"
+    ],
+    "require": {
+        "php": "^8.2",
+        "phpstan/phpstan": "^2.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^10.0 || ^11.0",
+        "squizlabs/php_codesniffer": "^3.9",
+        "slevomat/coding-standard": "^8.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Coffiso\\PHPStan\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Coffiso\\PHPStan\\Tests\\": "tests/"
+        },
+        "classmap": [
+            "tests/Rule/data"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "rules.neon"
+            ]
+        }
+    },
+    "scripts": {
+        "check": [
+            "@check:cs",
+            "@check:types",
+            "@check:tests"
+        ],
+        "check:cs": "phpcs",
+        "check:tests": "phpunit",
+        "check:types": "phpstan analyse --ansi",
+        "fix:cs": "phpcbf"
+    }
+}

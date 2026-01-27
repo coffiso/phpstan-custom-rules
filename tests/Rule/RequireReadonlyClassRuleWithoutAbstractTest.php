@@ -9,19 +9,21 @@ use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
 /**
+ * RequireReadonlyClassRuleのテスト - reportAbstractClasses:false設定
+ *
  * @extends RuleTestCase<RequireReadonlyClassRule>
  */
-final class RequireReadonlyClassRuleTest extends RuleTestCase
+final class RequireReadonlyClassRuleWithoutAbstractTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
         return new RequireReadonlyClassRule(
-            reportAbstractClasses: true,
+            reportAbstractClasses: false,
             reportClassesExtendingNonReadonlyParent: false,
         );
     }
 
-    public function testRule(): void
+    public function testAbstractClassesNotReported(): void
     {
         $this->analyse([__DIR__ . '/data/RequireReadonlyClassRuleTest.php'], [
             [
@@ -36,10 +38,7 @@ final class RequireReadonlyClassRuleTest extends RuleTestCase
                 'Class RequireReadonlyClassRuleTest\MixedReadonlyPropertiesClass has all properties (3) marked as readonly. Declare the class as readonly and remove readonly modifiers from individual properties.',
                 37,
             ],
-            [
-                'Class RequireReadonlyClassRuleTest\AbstractAllReadonlyClass has all properties (1) marked as readonly. Declare the class as readonly and remove readonly modifiers from individual properties.',
-                83,
-            ],
+            // AbstractAllReadonlyClass は報告されない
             [
                 'Class RequireReadonlyClassRuleTest\FinalAllReadonlyClass has all properties (1) marked as readonly. Declare the class as readonly and remove readonly modifiers from individual properties.',
                 96,
@@ -90,6 +89,7 @@ final class RequireReadonlyClassRuleTest extends RuleTestCase
             ],
         ]);
     }
+
     /**
      * @return string[]
      */

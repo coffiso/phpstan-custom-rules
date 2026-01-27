@@ -183,3 +183,241 @@ class ChildWithReadonlyProperty extends NonReadonlyParent
         parent::__construct($value);
     }
 }
+/**
+ * プロパティなしのクラス（readonlyにするプロパティがない）
+ */
+class EmptyClass
+{
+    public function doSomething(): void
+    {
+    }
+}
+
+/**
+ * プロパティは1つだけで、readonlyである
+ */
+class SingleReadonlyPropertyClass
+{
+    public readonly string $name;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+}
+
+/**
+ * トレイトを使用し、トレイトのプロパティがすべてreadonly
+ */
+trait ReadonlyPropertyTrait
+{
+    public readonly string $trait_prop;
+}
+
+class ClassUsingReadonlyTrait
+{
+    use ReadonlyPropertyTrait;
+
+    public readonly int $class_prop;
+
+    public function __construct(string $trait_prop, int $class_prop)
+    {
+        $this->trait_prop = $trait_prop;
+        $this->class_prop = $class_prop;
+    }
+}
+
+/**
+ * トレイトを使用し、トレイトのプロパティにuntyped のものがある
+ */
+trait UntypedPropertyTrait
+{
+    /** @var string */
+    public $untyped_trait_prop;
+}
+
+class ClassUsingUntypedTrait
+{
+    use UntypedPropertyTrait;
+
+    public readonly int $class_prop;
+
+    public function __construct(string $untyped_trait_prop, int $class_prop)
+    {
+        $this->untyped_trait_prop = $untyped_trait_prop;
+        $this->class_prop = $class_prop;
+    }
+}
+
+/**
+ * トレイトを使用し、トレイトのプロパティがstaticである
+ */
+trait StaticPropertyTrait
+{
+    public static string $static_trait_prop = 'static';
+}
+
+class ClassUsingStaticTrait
+{
+    use StaticPropertyTrait;
+
+    public readonly int $class_prop;
+
+    public function __construct(int $class_prop)
+    {
+        $this->class_prop = $class_prop;
+    }
+}
+
+/**
+ * イミュータブルなクラスの典型例
+ */
+class Person
+{
+    public readonly string $firstName;
+    public readonly string $lastName;
+    public readonly int $age;
+
+    public function __construct(string $firstName, string $lastName, int $age)
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->age = $age;
+    }
+
+    public function getFullName(): string
+    {
+        return "{$this->firstName} {$this->lastName}";
+    }
+}
+
+/**
+ * nullableなプロパティがある（型宣言あり）
+ */
+class ClassWithNullableProperty
+{
+    public readonly string $name;
+    public readonly ?string $nickname;
+
+    public function __construct(string $name, ?string $nickname = null)
+    {
+        $this->name = $name;
+        $this->nickname = $nickname;
+    }
+}
+
+/**
+ * ユニオン型を使用したプロパティ
+ */
+class ClassWithUnionType
+{
+    public readonly string|int $identifier;
+    public readonly bool $active;
+
+    public function __construct(string|int $identifier, bool $active = true)
+    {
+        $this->identifier = $identifier;
+        $this->active = $active;
+    }
+}
+
+/**
+ * モダンな複雑な型宣言（PHP 8.1+）
+ */
+class ClassWithComplexTypes
+{
+    public readonly array $items;
+    public readonly \DateTimeInterface $createdAt;
+    public readonly bool $archived;
+
+    public function __construct(array $items, \DateTimeInterface $createdAt)
+    {
+        $this->items = $items;
+        $this->createdAt = $createdAt;
+        $this->archived = false;
+    }
+}
+
+/**
+ * 複数のトレイトを使用
+ */
+trait TimestampTrait
+{
+    public readonly \DateTime $createdAt;
+}
+
+trait IdentifierTrait
+{
+    public readonly string $id;
+}
+
+class ClassWithMultipleTraits
+{
+    use TimestampTrait;
+    use IdentifierTrait;
+
+    public readonly string $name;
+
+    public function __construct(string $id, string $name, \DateTime $createdAt)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->createdAt = $createdAt;
+    }
+}
+
+/**
+ * privateプロパティがあるケース
+ */
+class ClassWithPrivateReadonlyProperty
+{
+    public readonly string $public_prop;
+    private readonly string $private_prop;
+
+    public function __construct(string $public_prop, string $private_prop)
+    {
+        $this->public_prop = $public_prop;
+        $this->private_prop = $private_prop;
+    }
+}
+
+/**
+ * protectedプロパティがあるケース
+ */
+class ClassWithProtectedReadonlyProperty
+{
+    public readonly string $public_prop;
+    protected readonly string $protected_prop;
+
+    public function __construct(string $public_prop, string $protected_prop)
+    {
+        $this->public_prop = $public_prop;
+        $this->protected_prop = $protected_prop;
+    }
+}
+
+/**
+ * デフォルト値を持つプロパティ（いない）
+ * プロモートされたプロパティのみ
+ */
+class ClassWithPromotedOnlyProperties
+{
+    public function __construct(
+        public readonly string $name,
+        public readonly int $count,
+        public readonly bool $active = true,
+    ) {
+    }
+}
+
+/**
+ * readonlyかつデフォルト値を持つプロモートプロパティ
+ */
+class ClassWithReadonlyPromotedWithDefault
+{
+    public function __construct(
+        public readonly string $name,
+        public readonly int $count = 0,
+    ) {
+    }
+}

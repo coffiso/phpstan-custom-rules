@@ -9,19 +9,21 @@ use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
 /**
+ * RequireReadonlyClassRuleのテスト - reportClassesExtendingNonReadonlyParent:true設定
+ *
  * @extends RuleTestCase<RequireReadonlyClassRule>
  */
-final class RequireReadonlyClassRuleTest extends RuleTestCase
+final class RequireReadonlyClassRuleWithNonReadonlyParentTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
         return new RequireReadonlyClassRule(
             reportAbstractClasses: true,
-            reportClassesExtendingNonReadonlyParent: false,
+            reportClassesExtendingNonReadonlyParent: true,
         );
     }
 
-    public function testRule(): void
+    public function testNonReadonlyParentClassesReported(): void
     {
         $this->analyse([__DIR__ . '/data/RequireReadonlyClassRuleTest.php'], [
             [
@@ -43,6 +45,11 @@ final class RequireReadonlyClassRuleTest extends RuleTestCase
             [
                 'Class RequireReadonlyClassRuleTest\FinalAllReadonlyClass has all properties (1) marked as readonly. Declare the class as readonly and remove readonly modifiers from individual properties.',
                 96,
+            ],
+            // ChildWithReadonlyProperty extends NonReadonlyParent - 報告される
+            [
+                'Class RequireReadonlyClassRuleTest\ChildWithReadonlyProperty extends non-readonly class RequireReadonlyClassRuleTest\NonReadonlyParent and cannot be made readonly.',
+                177,
             ],
             [
                 'Class RequireReadonlyClassRuleTest\SingleReadonlyPropertyClass has all properties (1) marked as readonly. Declare the class as readonly and remove readonly modifiers from individual properties.',
@@ -90,6 +97,7 @@ final class RequireReadonlyClassRuleTest extends RuleTestCase
             ],
         ]);
     }
+
     /**
      * @return string[]
      */

@@ -183,12 +183,10 @@ final readonly class RequireReadonlyClassRule implements Rule
         $readonlyPropertyCount += $traitCheckResult->readonlyPropertyCount;
 
         // readonly classにできる条件:
-        // 1. プロパティが1つ以上ある
-        // 2. staticプロパティがない
-        // 3. 型なしプロパティがない
-        // 4. すべてのプロパティがreadonly
-        $canBeReadonly = $propertyCount > 0
-            && !$hasStaticProperty
+        // 1. staticプロパティがない
+        // 2. 型なしプロパティがない
+        // 3. すべてのプロパティがreadonly（プロパティがない場合も該当）
+        $canBeReadonly = !$hasStaticProperty
             && !$hasUntypedProperty
             && $allPropertiesReadonly;
 

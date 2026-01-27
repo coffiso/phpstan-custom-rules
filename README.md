@@ -11,8 +11,52 @@ PHPStan の型解析機能を活用したカスタムルール集です。
 
 ## インストール
 
+GitHub リポジトリから直接インストールします。プロジェクトの `composer.json` に以下を追加してください：
+
+### 方法1: 最新の main ブランチを使用
+
+```json
+{
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/coffiso/phpstan-custom-rules.git"
+        }
+    ],
+    "require-dev": {
+        "coffiso/phpstan-custom-rules": "dev-main"
+    }
+}
+```
+
+その後、以下を実行します：
+
 ```bash
-composer require --dev coffiso/phpstan-custom-rules
+composer update
+```
+
+### 方法2: リリースバージョンを使用
+
+リポジトリでリリースを公開している場合、バージョンタグで指定できます：
+
+```json
+{
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/coffiso/phpstan-custom-rules.git"
+        }
+    ],
+    "require-dev": {
+        "coffiso/phpstan-custom-rules": "^1.0"
+    }
+}
+```
+
+### 方法3: コマンドラインで直接指定
+
+```bash
+composer require --dev "coffiso/phpstan-custom-rules:dev-main" --repository-url=https://github.com/coffiso/phpstan-custom-rules.git
 ```
 
 ## 設定
@@ -142,6 +186,28 @@ composer check
 composer check:types   # PHPStan
 composer check:tests   # PHPUnit
 composer check:cs      # PHP_CodeSniffer
+```
+
+### リリース方法
+
+バージョンタグを切ることで、特定のバージョンを参照可能にします：
+
+```bash
+# バージョンタグを作成（例：v1.0.0）
+git tag v1.0.0
+git push origin v1.0.0
+
+# または GitHub UI からリリースを作成
+```
+
+ユーザーは以下のように特定のバージョンを指定できます：
+
+```json
+{
+    "require-dev": {
+        "coffiso/phpstan-custom-rules": "v1.0.0"
+    }
+}
 ```
 
 ### 新しいルールの追加

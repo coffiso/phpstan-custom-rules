@@ -5,6 +5,17 @@ parametersSchema:
             reportAbstractClasses: bool()
             reportClassesExtendingNonReadonlyParent: bool()
         ])
+        forbidCustomTypes: structure([
+            enabled: bool()
+            list: arrayOf(anyOf(
+                string()
+                structure([
+                    description: schema(string(), nullable())
+                    typeHintOnly: schema(bool(), nullable())
+                    withSubclasses: schema(bool(), nullable())
+                ])
+            ))
+        ])
     ])
 
 parameters:
@@ -13,6 +24,9 @@ parameters:
             enabled: true
             reportAbstractClasses: true
             reportClassesExtendingNonReadonlyParent: false
+        forbidCustomTypes:
+            enabled: true
+            list: []
 
 services:
     -
@@ -21,6 +35,14 @@ services:
             reportAbstractClasses: %coffisoRules.requireReadonlyClass.reportAbstractClasses%
             reportClassesExtendingNonReadonlyParent: %coffisoRules.requireReadonlyClass.reportClassesExtendingNonReadonlyParent%
 
+    -
+        class: Coffiso\PHPStan\Rule\ForbidCustomTypesRule
+        arguments:
+            forbiddenTypes: %coffisoRules.forbidCustomTypes.list%
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
+
+    Coffiso\PHPStan\Rule\ForbidCustomTypesRule:
+        phpstan.rules.rule: %coffisoRules.forbidCustomTypes.enabled%

@@ -70,7 +70,9 @@ includes:
 
 ## 利用可能なルール
 
-### RequireReadonlyClassRule
+このルール集には、以下のルールが含まれています。
+
+### 1. RequireReadonlyClassRule
 
 `readonly class` として定義できる条件を満たしているクラスに警告を出すルールです。
 
@@ -163,6 +165,120 @@ readonly class Product
     ) {
     }
 }
+```
+
+### 2. ForbidCustomTypesRule
+
+指定した型の使用を禁止するルールです。プロジェクト内で特定のクラスの使用を禁止したい場合に有効です。
+
+#### 検出対象
+
+以下の場所での型の使用を検出します：
+
+1. **関数・メソッドの引数型ヒント** - ネイティブ型ヒントおよび PHPDoc `@param`
+2. **戻り値型ヒント** - ネイティブ型ヒントおよび PHPDoc `@return`
+3. **プロパティの型宣言** - ネイティブ型宣言およびPHPDoc `@var`
+4. **クラスの継承** - `extends` で指定された型
+5. **インターフェース実装** - `implements` で指定された型
+6. **トレイト使用** - `use` で指定された型
+7. **PHPDoc インライン型** - `@var` タグ内の型
+
+#### 設定オプション
+
+```neon
+parameters:
+    coffisoRules:
+        forbidCustomTypes:
+            enabled: true
+            list:
+                # シンプルな記法（文字列）：説明なし
+                'DateTime': 'Use DateTimeImmutable instead'
+                'DateTimeInterface': 'Use DateTimeImmutable instead'
+                
+                # 詳細な記法（配列）：オプション指定可能
+                'SomeClass':
+                    description: 'This class is deprecated'  # エラーメッセージに表示される説明
+                    typeHintOnly: false                      # true の場合、型ヒントのみ禁止（extends/implements/use は許可）
+                    withSubclasses: false                    # true の場合、サブクラスも禁止対象に含める
+```
+
+#### 使用例
+
+```php
+// phpstan.neon の設定例
+parameters:
+    coffisoRules:
+        forbidCustomTypes:
+            enabled: true
+            list:
+                'DateTime': 'Use DateTimeImmutable for immutability'
+                'DateTimeInterface':
+                    description: 'Use DateTimeImmutable'
+                    typeHintOnly: true
+                'LegacyClass':
+                    description: 'This class is deprecated, use NewClass instead'
+                    withSubclasses: true
+```
+
+#### 検出例
+
+```php
+// NG: DateTime の使用（引数型）
+function processDate(DateTime $date): void
+{
+    // ...
+}
+
+// NG: DateTime の使用（戻り値型）
+function getCurrentDate(): DateTime
+{
+    return new DateTime();
+}
+
+// NG: DateTimeInterface の使用（PHPDoc）
+/**
+ * @param DateTimeInterface $date
+ */
+function handleDate($date): void
+{
+    // ...
+}
+
+// OK: DateTimeImmutable の使用
+function processDate(DateTimeImmutable $date): void
+{
+    // ...
+}
+
+// OK: 単純型の使用
+function processDate(string $date): void
+{
+    // ...
+}
+```
+
+#### 設定オプションの詳細
+
+##### `typeHintOnly`
+
+`true` に設定すると、型ヒント（パラメータ、戻り値、プロパティ）でのみ禁止され、`extends`/`implements`/`use` での使用は許可されます。
+
+```php
+// typeHintOnly: true の場合
+function doSomething(LegacyClass $obj): void {} // NG: 型ヒントで禁止
+
+class MyClass extends LegacyClass {}             // OK: extends は許可
+```
+
+##### `withSubclasses`
+
+`true` に設定すると、指定したクラスを継承したすべてのサブクラスも禁止対象に含まれます。
+
+```php
+// withSubclasses: true の場合、LegacyClass とそのすべての子クラスが禁止される
+class ChildClass extends LegacyClass {}
+
+function doSomething(ChildClass $obj): void {}  // NG: サブクラスも禁止
 ```
 
 ## 開発

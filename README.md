@@ -306,6 +306,30 @@ parameters:
             ignoreConstructorWithArguments: true
 ```
 
+### 4. SuggestFunctionInsteadOfClassUsageRule
+
+`SuggestFunctionInsteadOfClassRule`に該当するクラスのメソッド呼び出しを検出し、関数への置き換えを推奨するルールです。
+
+#### 検出対象
+
+以下のメソッド呼び出しを検出します：
+
+1. **静的メソッド呼び出し** - `ClassName::method()`
+2. **インスタンスメソッド呼び出し** - `$obj->method()`
+3. **`__invoke`省略呼び出し** - `(new MyClass())()`、`$callable()`
+
+#### 設定オプション
+
+```neon
+parameters:
+    coffisoRules:
+        suggestFunctionInsteadOfClassUsage:
+            enabled: true
+            reportStaticOnlyClasses: true
+            reportSinglePublicMethodClasses: true
+            ignoreConstructorWithArguments: true
+```
+
 #### 良い例
 
 ```php
@@ -358,30 +382,15 @@ class SinglePublicMethod
     {
     }
 }
-```
 
-#### 設定オプションの詳細
+// NG: これらのクラスのメソッド呼び出しも警告される
+StaticOnly::foo();        // SuggestFunctionInsteadOfClassUsageRuleで検知
 
-##### `typeHintOnly`
+$obj = new SinglePublicMethod();
+$obj->run();              // SuggestFunctionInsteadOfClassUsageRuleで検知
 
-`true` に設定すると、型ヒント（パラメータ、戻り値、プロパティ）でのみ禁止され、`extends`/`implements`/`use` での使用は許可されます。
-
-```php
-// typeHintOnly: true の場合
-function doSomething(LegacyClass $obj): void {} // NG: 型ヒントで禁止
-
-class MyClass extends LegacyClass {}             // OK: extends は許可
-```
-
-##### `withSubclasses`
-
-`true` に設定すると、指定したクラスを継承したすべてのサブクラスも禁止対象に含まれます。
-
-```php
-// withSubclasses: true の場合、LegacyClass とそのすべての子クラスが禁止される
-class ChildClass extends LegacyClass {}
-
-function doSomething(ChildClass $obj): void {}  // NG: サブクラスも禁止
+$invokable = new InvokableClass();
+$invokable();             // __invoke呼び出しも検知
 ```
 
 ## 開発

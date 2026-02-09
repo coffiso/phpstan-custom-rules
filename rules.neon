@@ -5,6 +5,9 @@ parametersSchema:
             reportAbstractClasses: bool()
             reportClassesExtendingNonReadonlyParent: bool()
         ])
+        topLevelFunctionFile: structure([
+            enabled: bool()
+        ])
         forbidCustomTypes: structure([
             enabled: bool()
             list: arrayOf(anyOf(
@@ -35,6 +38,8 @@ parameters:
             enabled: true
             reportAbstractClasses: true
             reportClassesExtendingNonReadonlyParent: false
+        topLevelFunctionFile:
+            enabled: true
         forbidCustomTypes:
             enabled: true
             list: []
@@ -54,6 +59,9 @@ services:
         arguments:
             reportAbstractClasses: %coffisoRules.requireReadonlyClass.reportAbstractClasses%
             reportClassesExtendingNonReadonlyParent: %coffisoRules.requireReadonlyClass.reportClassesExtendingNonReadonlyParent%
+
+    -
+        class: Coffiso\PHPStan\Rule\TopLevelFunctionFileRule
 
     -
         class: Coffiso\PHPStan\Rule\ForbidCustomTypesRule
@@ -76,6 +84,9 @@ services:
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
+
+    Coffiso\PHPStan\Rule\TopLevelFunctionFileRule:
+        phpstan.rules.rule: %coffisoRules.topLevelFunctionFile.enabled%
 
     Coffiso\PHPStan\Rule\ForbidCustomTypesRule:
         phpstan.rules.rule: %coffisoRules.forbidCustomTypes.enabled%

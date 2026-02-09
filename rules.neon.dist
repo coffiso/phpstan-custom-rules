@@ -5,6 +5,9 @@ parametersSchema:
             reportAbstractClasses: bool()
             reportClassesExtendingNonReadonlyParent: bool()
         ])
+        topLevelFunctionFile: structure([
+            enabled: bool()
+        ])
     ])
 
 parameters:
@@ -13,6 +16,8 @@ parameters:
             enabled: true
             reportAbstractClasses: true
             reportClassesExtendingNonReadonlyParent: false
+        topLevelFunctionFile:
+            enabled: true
 
 services:
     -
@@ -21,6 +26,12 @@ services:
             reportAbstractClasses: %coffisoRules.requireReadonlyClass.reportAbstractClasses%
             reportClassesExtendingNonReadonlyParent: %coffisoRules.requireReadonlyClass.reportClassesExtendingNonReadonlyParent%
 
+    -
+        class: Coffiso\PHPStan\Rule\TopLevelFunctionFileRule
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
+
+    Coffiso\PHPStan\Rule\TopLevelFunctionFileRule:
+        phpstan.rules.rule: %coffisoRules.topLevelFunctionFile.enabled%

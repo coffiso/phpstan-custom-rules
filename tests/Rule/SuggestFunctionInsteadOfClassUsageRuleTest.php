@@ -28,25 +28,25 @@ final class SuggestFunctionInsteadOfClassUsageRuleTest extends RuleTestCase
             // 静的メソッド呼び出し
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\StaticOnlyClass contains only public static methods and can be replaced with functions. Consider using a function instead of a static method call.',
-                132,
+                141,
             ],
             [
-                'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodClass contains only public static methods and can be replaced with functions. Consider using a function instead of a static method call.',
-                135,
+                'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicStaticMethodClass contains only public static methods and can be replaced with functions. Consider using a function instead of a static method call.',
+                144,
             ],
             // インスタンスメソッド呼び出し
             [
-                'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodClass has a single public method (run) and can be replaced with a function. Consider using a function instead of an instance method call.',
-                139,
+                'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodClass has a single public method (execute) and can be replaced with a function. Consider using a function instead of an instance method call.',
+                148,
             ],
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodWithPrivateHelper has a single public method (run) and can be replaced with a function. Consider using a function instead of an instance method call.',
-                142,
+                151,
             ],
             // __invoke呼び出し
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\InvokableClass has a single public method (__invoke) and can be replaced with a function. Consider using a function instead of __invoke magic method.',
-                146,
+                155,
             ],
         ]);
     }

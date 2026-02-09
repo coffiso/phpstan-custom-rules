@@ -17,9 +17,17 @@ class StaticOnlyClass
 }
 
 // 単一のpublicメソッドを持つクラス（静的）
-class SinglePublicMethodClass
+class SinglePublicStaticMethodClass
 {
     public static function execute(): void
+    {
+    }
+}
+
+// 単一のpublicメソッドを持つクラス（非静的）
+class SinglePublicMethodClass
+{
+    public function execute(): void
     {
     }
 }
@@ -141,7 +149,7 @@ function testUsages(): void
     StaticOnlyClass::foo();
 
     // 静的メソッド呼び出し - 警告すべき
-    SinglePublicMethodClass::execute();
+    SinglePublicStaticMethodClass::execute();
 
     // インスタンスメソッド呼び出し - 警告すべき
     $obj = new SinglePublicMethodClass();

@@ -28,25 +28,25 @@ final class SuggestFunctionInsteadOfClassUsageRuleTest extends RuleTestCase
             // 静的メソッド呼び出し
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\StaticOnlyClass contains only public static methods and can be replaced with functions. Consider using a function instead of a static method call.',
-                141,
+                149,
             ],
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicStaticMethodClass contains only public static methods and can be replaced with functions. Consider using a function instead of a static method call.',
-                144,
+                152,
             ],
             // インスタンスメソッド呼び出し
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodClass has a single public method (execute) and can be replaced with a function. Consider using a function instead of an instance method call.',
-                148,
+                156,
             ],
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\SinglePublicMethodWithPrivateHelper has a single public method (run) and can be replaced with a function. Consider using a function instead of an instance method call.',
-                151,
+                159,
             ],
             // __invoke呼び出し
             [
                 'Class SuggestFunctionInsteadOfClassUsageRuleTest\InvokableClass has a single public method (__invoke) and can be replaced with a function. Consider using a function instead of __invoke magic method.',
-                155,
+                163,
             ],
         ]);
     }

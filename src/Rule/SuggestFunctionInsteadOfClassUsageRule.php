@@ -101,7 +101,7 @@ final readonly class SuggestFunctionInsteadOfClassUsageRule implements Rule
     private function processMethodCall(MethodCall $node, Scope $scope): array
     {
         $callerType = $scope->getType($node->var);
-        
+
         $classReflections = $callerType->getObjectClassReflections();
         foreach ($classReflections as $classReflection) {
             $checkResult = $this->shouldSuggestFunction($classReflection);
@@ -136,7 +136,7 @@ final readonly class SuggestFunctionInsteadOfClassUsageRule implements Rule
         }
 
         $callerType = $scope->getType($node->name);
-        
+
         $classReflections = $callerType->getObjectClassReflections();
         foreach ($classReflections as $classReflection) {
             // __invokeメソッドを持つクラスのみ対象

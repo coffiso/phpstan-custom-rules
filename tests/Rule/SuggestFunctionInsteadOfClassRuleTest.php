@@ -10,14 +10,14 @@ use PHPStan\Testing\RuleTestCase;
 
 /**
  * @extends RuleTestCase<SuggestFunctionInsteadOfClassRule>
-            [
-                'Class SuggestFunctionInsteadOfClassRuleTest\\SinglePublicMethodClass has a single public method (run) and can be replaced with a function.',
-                18,
-            ],
-            [
-                'Class SuggestFunctionInsteadOfClassRuleTest\\SinglePublicMethodWithPrivateHelper has a single public method (run) and can be replaced with a function.',
-                25,
-            ],
+ */
+final class SuggestFunctionInsteadOfClassRuleTest extends RuleTestCase
+{
+    protected function getRule(): Rule
+    {
+        return new SuggestFunctionInsteadOfClassRule(
+            reportStaticOnlyClasses: true,
+            reportSinglePublicMethodClasses: true,
             ignoreConstructorWithArguments: true,
         );
     }
@@ -31,19 +31,19 @@ use PHPStan\Testing\RuleTestCase;
             ],
             [
                 'Class SuggestFunctionInsteadOfClassRuleTest\SinglePublicMethodClass has a single public method (run) and can be replaced with a function.',
-                [
-                    'Class SuggestFunctionInsteadOfClassRuleTest\\WithConstructorNoArgs has a single public method (run) and can be replaced with a function.',
-                    107,
-                ],
-                [
-                    'Class SuggestFunctionInsteadOfClassRuleTest\\PublicStaticOnlyWithPrivateMethod has a single public method (foo) and can be replaced with a function.',
-                    118,
-                ],
-                91,
+                18,
+            ],
+            [
+                'Class SuggestFunctionInsteadOfClassRuleTest\SinglePublicMethodWithPrivateHelper has a single public method (run) and can be replaced with a function.',
+                25,
+            ],
+            [
+                'Class SuggestFunctionInsteadOfClassRuleTest\WithConstructorNoArgs has a single public method (run) and can be replaced with a function.',
+                107,
             ],
             [
                 'Class SuggestFunctionInsteadOfClassRuleTest\PublicStaticOnlyWithPrivateMethod has a single public method (foo) and can be replaced with a function.',
-                102,
+                118,
             ],
         ]);
     }

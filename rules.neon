@@ -30,6 +30,12 @@ parametersSchema:
             reportSinglePublicMethodClasses: bool()
             ignoreConstructorWithArguments: bool()
         ])
+        suggestFunctionInsteadOfClassUsage: structure([
+            enabled: bool()
+            reportStaticOnlyClasses: bool()
+            reportSinglePublicMethodClasses: bool()
+            ignoreConstructorWithArguments: bool()
+        ])
     ])
 
 parameters:
@@ -48,6 +54,11 @@ parameters:
             allowSameNameAlias: false
             reportGroupUse: true
         suggestFunctionInsteadOfClass:
+            enabled: true
+            reportStaticOnlyClasses: true
+            reportSinglePublicMethodClasses: true
+            ignoreConstructorWithArguments: true
+        suggestFunctionInsteadOfClassUsage:
             enabled: true
             reportStaticOnlyClasses: true
             reportSinglePublicMethodClasses: true
@@ -81,6 +92,13 @@ services:
             reportSinglePublicMethodClasses: %coffisoRules.suggestFunctionInsteadOfClass.reportSinglePublicMethodClasses%
             ignoreConstructorWithArguments: %coffisoRules.suggestFunctionInsteadOfClass.ignoreConstructorWithArguments%
 
+    -
+        class: Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassUsageRule
+        arguments:
+            reportStaticOnlyClasses: %coffisoRules.suggestFunctionInsteadOfClassUsage.reportStaticOnlyClasses%
+            reportSinglePublicMethodClasses: %coffisoRules.suggestFunctionInsteadOfClassUsage.reportSinglePublicMethodClasses%
+            ignoreConstructorWithArguments: %coffisoRules.suggestFunctionInsteadOfClassUsage.ignoreConstructorWithArguments%
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
@@ -96,3 +114,6 @@ conditionalTags:
 
     Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule:
         phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClass.enabled%
+
+    Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassUsageRule:
+        phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClassUsage.enabled%

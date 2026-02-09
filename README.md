@@ -281,6 +281,109 @@ class ChildClass extends LegacyClass {}
 function doSomething(ChildClass $obj): void {}  // NG: サブクラスも禁止
 ```
 
+### 3. SuggestFunctionInsteadOfClassRule
+
+クラスである必要のないメソッドを、関数定義に置き換えることを推奨するルールです。
+
+以下の条件をすべて満たすクラスを検出します：
+
+1. `extends` / `implements` を使用していない
+2. トレイトを `use` していない
+3. public プロパティが定義されていない
+4. static クラスプロパティが定義されていない
+5. public static メソッドのみで構成されている、**または** public メソッドが単一である
+6. （オプション）コンストラクタに引数がある場合は除外
+
+#### 設定オプション
+
+```neon
+parameters:
+    coffisoRules:
+        suggestFunctionInsteadOfClass:
+            enabled: true
+            reportStaticOnlyClasses: true
+            reportSinglePublicMethodClasses: true
+            ignoreConstructorWithArguments: true
+```
+
+#### 良い例
+
+```php
+// OK: extends を使用している
+class Service extends BaseService
+{
+    public function run(): void
+    {
+    }
+}
+
+// OK: public プロパティがある
+class HasPublicProperty
+{
+    public string $name;
+    public function run(): void
+    {
+    }
+}
+
+// OK: static プロパティがある
+class HasStaticProperty
+{
+    private static int $count = 0;
+    public static function run(): void
+    {
+    }
+}
+```
+
+#### 悪い例（警告が出る）
+
+```php
+// NG: public static メソッドのみ
+class StaticOnly
+{
+    public static function foo(): void
+    {
+    }
+
+    public static function bar(): void
+    {
+    }
+}
+
+// NG: public メソッドが1つだけ
+class SinglePublicMethod
+{
+    public function run(): void
+    {
+    }
+}
+```
+
+#### 設定オプションの詳細
+
+##### `typeHintOnly`
+
+`true` に設定すると、型ヒント（パラメータ、戻り値、プロパティ）でのみ禁止され、`extends`/`implements`/`use` での使用は許可されます。
+
+```php
+// typeHintOnly: true の場合
+function doSomething(LegacyClass $obj): void {} // NG: 型ヒントで禁止
+
+class MyClass extends LegacyClass {}             // OK: extends は許可
+```
+
+##### `withSubclasses`
+
+`true` に設定すると、指定したクラスを継承したすべてのサブクラスも禁止対象に含まれます。
+
+```php
+// withSubclasses: true の場合、LegacyClass とそのすべての子クラスが禁止される
+class ChildClass extends LegacyClass {}
+
+function doSomething(ChildClass $obj): void {}  // NG: サブクラスも禁止
+```
+
 ## 開発
 
 ### セットアップ

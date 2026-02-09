@@ -16,6 +16,12 @@ parametersSchema:
                 ])
             ))
         ])
+        suggestFunctionInsteadOfClass: structure([
+            enabled: bool()
+            reportStaticOnlyClasses: bool()
+            reportSinglePublicMethodClasses: bool()
+            ignoreConstructorWithArguments: bool()
+        ])
     ])
 
 parameters:
@@ -27,6 +33,11 @@ parameters:
         forbidCustomTypes:
             enabled: true
             list: []
+        suggestFunctionInsteadOfClass:
+            enabled: true
+            reportStaticOnlyClasses: true
+            reportSinglePublicMethodClasses: true
+            ignoreConstructorWithArguments: true
 
 services:
     -
@@ -40,9 +51,19 @@ services:
         arguments:
             forbiddenTypes: %coffisoRules.forbidCustomTypes.list%
 
+    -
+        class: Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule
+        arguments:
+            reportStaticOnlyClasses: %coffisoRules.suggestFunctionInsteadOfClass.reportStaticOnlyClasses%
+            reportSinglePublicMethodClasses: %coffisoRules.suggestFunctionInsteadOfClass.reportSinglePublicMethodClasses%
+            ignoreConstructorWithArguments: %coffisoRules.suggestFunctionInsteadOfClass.ignoreConstructorWithArguments%
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
 
     Coffiso\PHPStan\Rule\ForbidCustomTypesRule:
         phpstan.rules.rule: %coffisoRules.forbidCustomTypes.enabled%
+
+    Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule:
+        phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClass.enabled%

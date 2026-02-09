@@ -16,6 +16,11 @@ parametersSchema:
                 ])
             ))
         ])
+        forbidAliasedImports: structure([
+            enabled: bool()
+            allowSameNameAlias: bool()
+            reportGroupUse: bool()
+        ])
         suggestFunctionInsteadOfClass: structure([
             enabled: bool()
             reportStaticOnlyClasses: bool()
@@ -33,6 +38,10 @@ parameters:
         forbidCustomTypes:
             enabled: true
             list: []
+        forbidAliasedImports:
+            enabled: true
+            allowSameNameAlias: false
+            reportGroupUse: true
         suggestFunctionInsteadOfClass:
             enabled: true
             reportStaticOnlyClasses: true
@@ -52,6 +61,12 @@ services:
             forbiddenTypes: %coffisoRules.forbidCustomTypes.list%
 
     -
+        class: Coffiso\PHPStan\Rule\ForbidAliasedImportsRule
+        arguments:
+            allowSameNameAlias: %coffisoRules.forbidAliasedImports.allowSameNameAlias%
+            reportGroupUse: %coffisoRules.forbidAliasedImports.reportGroupUse%
+
+    -
         class: Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule
         arguments:
             reportStaticOnlyClasses: %coffisoRules.suggestFunctionInsteadOfClass.reportStaticOnlyClasses%
@@ -64,6 +79,9 @@ conditionalTags:
 
     Coffiso\PHPStan\Rule\ForbidCustomTypesRule:
         phpstan.rules.rule: %coffisoRules.forbidCustomTypes.enabled%
+
+    Coffiso\PHPStan\Rule\ForbidAliasedImportsRule:
+        phpstan.rules.rule: %coffisoRules.forbidAliasedImports.enabled%
 
     Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule:
         phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClass.enabled%

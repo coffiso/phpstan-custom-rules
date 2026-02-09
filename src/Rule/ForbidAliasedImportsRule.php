@@ -94,10 +94,9 @@ final readonly class ForbidAliasedImportsRule implements Rule
         }
 
         $message = sprintf(
-            'Aliased import "use %s as %s" is forbidden. Prefer importing the specific symbol without alias (use %s).',
+            'Alias import "use %s as %s" is prohibited. If the purpose is to avoid name collisions, use partial namespace imports instead.',
             $importedName->toString(),
             $alias,
-            $importedName->toString(),
         );
 
         return [RuleErrorBuilder::message($message)

@@ -30,6 +30,12 @@ parametersSchema:
             reportSinglePublicMethodClasses: bool()
             ignoreConstructorWithArguments: bool()
         ])
+        suggestFunctionInsteadOfClassCallsite: structure([
+            enabled: bool()
+            reportStaticOnlyClasses: bool()
+            reportSinglePublicMethodClasses: bool()
+            ignoreConstructorWithArguments: bool()
+        ])
     ])
 
 parameters:
@@ -48,6 +54,11 @@ parameters:
             allowSameNameAlias: false
             reportGroupUse: true
         suggestFunctionInsteadOfClass:
+            enabled: true
+            reportStaticOnlyClasses: true
+            reportSinglePublicMethodClasses: true
+            ignoreConstructorWithArguments: true
+        suggestFunctionInsteadOfClassCallsite:
             enabled: true
             reportStaticOnlyClasses: true
             reportSinglePublicMethodClasses: true
@@ -81,6 +92,23 @@ services:
             reportSinglePublicMethodClasses: %coffisoRules.suggestFunctionInsteadOfClass.reportSinglePublicMethodClasses%
             ignoreConstructorWithArguments: %coffisoRules.suggestFunctionInsteadOfClass.ignoreConstructorWithArguments%
 
+    -
+        class: Coffiso\PHPStan\Rule\Helper\ClassFunctionCandidateInspector
+        arguments:
+            reportStaticOnlyClasses: %coffisoRules.suggestFunctionInsteadOfClassCallsite.reportStaticOnlyClasses%
+            reportSinglePublicMethodClasses: %coffisoRules.suggestFunctionInsteadOfClassCallsite.reportSinglePublicMethodClasses%
+            ignoreConstructorWithArguments: %coffisoRules.suggestFunctionInsteadOfClassCallsite.ignoreConstructorWithArguments%
+
+    -
+        class: Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassStaticCallRule
+        arguments:
+            inspector: @Coffiso\PHPStan\Rule\Helper\ClassFunctionCandidateInspector
+
+    -
+        class: Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassMethodCallRule
+        arguments:
+            inspector: @Coffiso\PHPStan\Rule\Helper\ClassFunctionCandidateInspector
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
@@ -96,3 +124,9 @@ conditionalTags:
 
     Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassRule:
         phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClass.enabled%
+
+    Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassStaticCallRule:
+        phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClassCallsite.enabled%
+
+    Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassMethodCallRule:
+        phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClassCallsite.enabled%

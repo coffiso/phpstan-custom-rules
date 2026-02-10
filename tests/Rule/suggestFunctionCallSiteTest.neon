@@ -1,0 +1,5 @@
+parameters:
+    bootstrapFiles:
+        - data/SuggestFunctionCallSiteTest.php
+    scanFiles:
+        - data/SuggestFunctionCallSiteTest.php

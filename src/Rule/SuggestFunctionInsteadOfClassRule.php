@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Coffiso\PHPStan\Rule;
 
+use Coffiso\PHPStan\Rule\Helper\MethodInfo;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\TraitUse;
@@ -71,6 +72,11 @@ final readonly class SuggestFunctionInsteadOfClassRule implements Rule
         $methodInfo = $this->collectMethodInfo($classNode);
 
         if ($methodInfo->publicMethodCount === 0) {
+            return [];
+        }
+
+        // __invoke() のみが public メソッドの場合は callable として機能するため除外
+        if ($methodInfo->publicMethodCount === 1 && $methodInfo->singlePublicMethodName === '__invoke') {
             return [];
         }
 
@@ -176,16 +182,5 @@ final readonly class SuggestFunctionInsteadOfClassRule implements Rule
             hasAnyMethod: $hasAnyMethod,
             allMethodsPublicStatic: $allMethodsPublicStatic,
         );
-    }
-}
-
-final readonly class MethodInfo
-{
-    public function __construct(
-        public int $publicMethodCount,
-        public string $singlePublicMethodName,
-        public bool $hasAnyMethod,
-        public bool $allMethodsPublicStatic,
-    ) {
     }
 }

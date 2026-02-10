@@ -125,3 +125,10 @@ class PublicStaticOnlyWithPrivateMethod
     {
     }
 }
+class CallableClass
+{
+    public function __invoke(string $value): string
+    {
+        return $value;
+    }
+}

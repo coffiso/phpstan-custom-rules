@@ -17,26 +17,23 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\Constant\ConstantBooleanType;
-use PHPStan\Type\NullType;
-
 use function in_array;
 use function sprintf;
 use function strtolower;
 
 /**
- * Detects redundant comparisons of bool-typed expressions with true/false/null literals.
+ * Detects redundant comparisons of bool-typed expressions with true/false literals.
  *
  * Examples of violations:
  *   $foo === true   (when $foo is bool)
  *   $foo == false   (when $foo is bool)
- *   $foo !== null   (when $foo is bool)
  *   foo() === true  (when foo() returns bool)
  *
  * @implements Rule<BinaryOp>
  */
 final readonly class RedundantBoolComparisonRule implements Rule
 {
-    private const BOOL_LITERALS = ['true', 'false', 'null'];
+    private const BOOL_LITERALS = ['true', 'false'];
 
     public function getNodeType(): string
     {

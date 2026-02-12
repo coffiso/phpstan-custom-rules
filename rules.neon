@@ -36,6 +36,9 @@ parametersSchema:
             reportSinglePublicMethodClasses: bool()
             ignoreConstructorWithArguments: bool()
         ])
+        redundantBoolComparison: structure([
+            enabled: bool()
+        ])
     ])
 
 parameters:
@@ -63,6 +66,8 @@ parameters:
             reportStaticOnlyClasses: true
             reportSinglePublicMethodClasses: true
             ignoreConstructorWithArguments: true
+        redundantBoolComparison:
+            enabled: true
 
 services:
     -
@@ -109,6 +114,9 @@ services:
         arguments:
             inspector: @Coffiso\PHPStan\Rule\Helper\ClassFunctionCandidateInspector
 
+    -
+        class: Coffiso\PHPStan\Rule\RedundantBoolComparisonRule
+
 conditionalTags:
     Coffiso\PHPStan\Rule\RequireReadonlyClassRule:
         phpstan.rules.rule: %coffisoRules.requireReadonlyClass.enabled%
@@ -130,3 +138,6 @@ conditionalTags:
 
     Coffiso\PHPStan\Rule\SuggestFunctionInsteadOfClassMethodCallRule:
         phpstan.rules.rule: %coffisoRules.suggestFunctionInsteadOfClassCallsite.enabled%
+
+    Coffiso\PHPStan\Rule\RedundantBoolComparisonRule:
+        phpstan.rules.rule: %coffisoRules.redundantBoolComparison.enabled%

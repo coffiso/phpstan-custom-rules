@@ -30,40 +30,28 @@ final class TopLevelFunctionFileRuleTest extends RuleTestCase
             __DIR__ . '/data/NotLowerCamelFile.php',
         ], [
             [
-                'Top-level function files must declare a namespace.',
+                'Function file name must be lowerCamelCase.',
+                1,
+            ],
+            [
+                'Functions in a function file must belong to a namespace.',
                 5,
             ],
             [
-                'Only one top-level function is allowed per file.',
+                'The function file name and function name must be the same.',
+                7,
+            ],
+            [
+                'The function file name and function name must be the same.',
+                7,
+            ],
+            [
+                'Only one function in a function file is allowed.',
                 11,
             ],
             [
-                'Function name must match file name. Expected multipleFunctions.',
+                'class is not allowed in a function file.',
                 11,
-            ],
-            [
-                'Function name must match file name. Expected nameMismatch.',
-                7,
-            ],
-            [
-                'Function name must be lowerCamelCase.',
-                7,
-            ],
-            [
-                'Function name must match file name. Expected notLowerCamel.',
-                7,
-            ],
-            [
-                'Top-level statement Stmt_Class is not allowed in a function-only file.',
-                11,
-            ],
-            [
-                'File name must be lowerCamelCase.',
-                7,
-            ],
-            [
-                'Function name must match file name. Expected NotLowerCamelFile.',
-                7,
             ],
         ]);
     }

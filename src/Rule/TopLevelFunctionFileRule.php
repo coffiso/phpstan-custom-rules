@@ -29,7 +29,7 @@ final class TopLevelFunctionFileRule implements Rule {
 
     private int $functionCountByFile = 0;
     private bool $isFunctionFile = false;
-    private bool $isClassFile = false;
+    private string $currentFile = '';
 
     public function getNodeType(): string {
         return Node::class;
@@ -39,6 +39,13 @@ final class TopLevelFunctionFileRule implements Rule {
      * @return list<\PHPStan\Rules\IdentifierRuleError>
      */
     public function processNode(Node $node, Scope $scope): array {
+        $file = $scope->getFile();
+        if ($this->currentFile !== $file) {
+            $this->currentFile = $file;
+            $this->functionCountByFile = 0;
+            $this->isFunctionFile = false;
+        }
+
         if ($node instanceof Function_) {
             $errors = [];
             // 名前空間がない関数定義は許可しない
@@ -58,7 +65,6 @@ final class TopLevelFunctionFileRule implements Rule {
                     ->build();
             }
 
-            $file = $scope->getFile();
             $fileBaseName = pathinfo($file, PATHINFO_FILENAME);
             // 関数ファイルはロワーキャメルケースでなければならない
             if (!$this->isLowerCamelCase($fileBaseName)) {

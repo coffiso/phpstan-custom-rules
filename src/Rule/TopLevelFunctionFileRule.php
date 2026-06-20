@@ -10,6 +10,7 @@ use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Enum_;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Trait_;
 use PhpParser\Node\Stmt\Const_;
@@ -27,9 +28,11 @@ use function sprintf;
  */
 final class TopLevelFunctionFileRule implements Rule {
 
-    private int $functionCountByFile = 0;
-    private bool $isFunctionFile = false;
-    private string $currentFile = '';
+    /** @var array<string, int> */
+    private array $functionCountByFile = [];
+
+    /** @var array<string, bool> */
+    private array $isFunctionFileByFile = [];
 
     public function getNodeType(): string {
         return Node::class;
@@ -40,11 +43,8 @@ final class TopLevelFunctionFileRule implements Rule {
      */
     public function processNode(Node $node, Scope $scope): array {
         $file = $scope->getFile();
-        if ($this->currentFile !== $file) {
-            $this->currentFile = $file;
-            $this->functionCountByFile = 0;
-            $this->isFunctionFile = false;
-        }
+        $this->functionCountByFile[$file] ??= 0;
+        $this->isFunctionFileByFile[$file] ??= false;
 
         if ($node instanceof Function_) {
             $errors = [];
@@ -56,9 +56,9 @@ final class TopLevelFunctionFileRule implements Rule {
                     ->build();
             }
 
-            $this->functionCountByFile++;
+            $this->functionCountByFile[$file]++;
             // 1ファイル1関数のみ許可
-            if ($this->functionCountByFile > 1) {
+            if ($this->functionCountByFile[$file] > 1) {
                 $errors[] = RuleErrorBuilder::message('Only one function in a function file is allowed.')
                     ->identifier('coffiso.topLevelFunctionFile.multipleFunctions')
                     ->line($node->getLine())
@@ -87,10 +87,10 @@ final class TopLevelFunctionFileRule implements Rule {
                 return $errors;
             }
 
-            $this->isFunctionFile = true;
+            $this->isFunctionFileByFile[$file] = true;
         }
 
-        if ($this->isFunctionFile) {
+        if ($this->isFunctionFileByFile[$file]) {
             $nodeDisplayName = match (true) {
                 $node instanceof Class_ => "class",
                 $node instanceof Enum_ => "enum",
